@@ -107,33 +107,14 @@ For detailed documentation, see the [Documentation](Docs/README.md) section, whi
 
 ## 🤖 BenchmarkDotNetWrapper.AI
 
-BenchmarkDotNetWrapper.AI is an extension for AI model benchmarking that helps you measure and analyze the performance of AI-related operations in your .NET applications.
+BenchmarkDotNetWrapper.AI demonstrates how to extend the wrapper with AI capabilities. Here's a quick example of how to use the AI extension:
 
 [![NuGet](https://img.shields.io/nuget/v/BenchmarkDotNetWrapper.AI.svg)](https://www.nuget.org/packages/BenchmarkDotNetWrapper.AI)
 
-### Features
-
-- Easy integration with BenchmarkDotNet
-- Support for AI-specific benchmarking scenarios including OpenAI models
-- Detailed performance metrics and analysis
-- API keys are never stored - only used temporarily for valid providers
-- Code optimization suggestions powered by AI
-- Compatible with .NET 8.0 and later
-
-### Installation
-
-```bash
-dotnet add package BenchmarkDotNetWrapper.AI
-```
-
-### Basic Usage
-
 ```csharp
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Running;
-using BenchmarkDotNet.AI;
-using BenchmarkDotNet.AI.Types.BenchmarkDotNet.AI.Types;
-using LLM;
+using BenchmarkDotNetWrapper;
+using BenchmarkDotNetWrapper.AI;
 
 [MemoryDiagnoser]
 public class MyBenchmark
@@ -145,60 +126,15 @@ public class MyBenchmark
     }
 }
 
-// Run the benchmark
-var summary = BenchmarkRunner.Run<MyBenchmark>();
-```
-
-### AI-Powered Code Analysis
-
-```csharp
-using System;
-using System.Threading.Tasks;
-using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Running;
-using BenchmarkDotNet.AI;
-using BenchmarkDotNet.AI.Types.BenchmarkDotNet.AI.Types;
-using BenchmarkDotNet.AI.LlmEngines.OpenAI;
-using LLM;
-
-[MemoryDiagnoser]
-public class MyBenchmark
-{
-    [Benchmark]
-    public void SlowMethod()
-    {
-        // Inefficient code to analyze
-        var list = new List<int>();
-        for (int i = 0; i < 1000000; i++)
-        {
-            list.Add(i);
-            // Inefficient implementation
-        }
-    }
-}
-
-// Run the benchmark with AI analysis
-var llmOptions = new LlmEngineOptions
+// Extend the benchmark runner with AI analysis
+var summary = BenchmarkRunner.Run<MyBenchmark>().WithAI(new LlmEngineOptions
 {
     EngineType = typeof(OpenAiEngine),
-    ApiKey = "your-openai-api-key", // Never stored, only used during execution
-    OveridingPrompt = null // Use the default prompt
-};
-
-var summary = await BenchmarkRunner<MyBenchmark>.Run(llmOptions);
+    ApiKey = "your-openai-api-key"
+});
 ```
 
-### Configuration Options
-
-The `LlmEngineOptions` class provides the configuration for the LLM engine:
-
-| Option | Description | Default |
-|--------|-------------|---------|
-| `EngineType` | Type that implements `ILlmEngine` | Required |
-| `ApiKey` | Your AI provider API key (never stored) | Empty string |
-| `OveridingPrompt` | Custom prompt to override the default | null |
-
-For more details on BenchmarkDotNetWrapper.AI, see the [AI Documentation](Docs/api/AIExtension.md).
+For more details on extending BenchmarkDotNetWrapper, see the [AI Documentation](Docs/api/AIExtension.md).
 
 ## 🤔 Why BenchmarkDotNetWrapper?
 
